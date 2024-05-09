@@ -1,6 +1,31 @@
-# Pull base image 
-From tomcat:8-jre8 
-
-# Maintainer 
-MAINTAINER "kserge2001@yahoo.fr" 
-#COPY ./webapp.war /usr/local/tomcat/webapps
+pipeline {
+    agent any
+    tools{
+        maven 'M2_HOME'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean'
+                sh 'mvn install'
+                sh 'mvn package'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deploy Step'
+                sleep 10
+            }
+        }
+        stage('Docker') {
+            steps {
+                echo 'Image step'
+            }
+        }
+    }
+}
